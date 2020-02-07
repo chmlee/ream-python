@@ -55,11 +55,13 @@ class test(Transformer):
     
     def name(self, n):
         (n,) = n
+        n = n.strip()
         return n[:]
 
     def key(self, k):
         (k, ) = k
-        return k[:-1]
+        k = k[:-1] #remove trailing :
+        return k[:]
 
     def val(self, v):
         (v, ) = v
@@ -70,7 +72,7 @@ class test(Transformer):
 
     def item(self, i):
         return i[0]
-
+    
 
     def content(self, c):
         d = {}
@@ -98,67 +100,9 @@ class test(Transformer):
         return h
 
 
+print('===============================================')
 p = parser.parse(md)
 output = test().transform(p)
 print(output)
-
-print('===============================================')
-
-class convert(Transformer):
-
-    def list_item(self, item):
-        (item_string, ) = item
-        item_string_list = item_string.split(": ")
-        l = [item_string_list[0], item_string_list[1]]
-        return l
-
-    def name(self, n):
-        (n, ) = n
-        return n[:]
-
-
-    def content(self, input):
-        d = {}
-        pair_list = input[:]
-        for pair in pair_list:
-            key = pair[0]
-            val = pair[1]
-            if key not in d:
-                d[key] = [val]
-            else:
-                d[key].append(val)
-        # unlist string
-        for key in d:
-            first_item = d[key][0] 
-            if type(first_item) != dict:
-                d[key] = first_item
-        return d
-    content1 = content
-    content2 = content
-    content3 = content
-    content4 = content
-    content5 = content
-    content6 = content
-    start = content
-    
-    def h(self, stuff):
-        return stuff[:]
-    h1 = h
-    h2 = h
-    h3 = h
-    h4 = h
-    h5 = h
-    h6 = h
-
-
-
-
-#p = parser.parse(md)
-#output = convert().transform(p)
-#print('===============================================')
-#
-#
-#print(json.dumps(output, indent =4))
-
 
 
