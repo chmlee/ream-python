@@ -16,7 +16,7 @@ PyYAMD is a YAMD parser and dumper written in Python.
 ### License
 
 This project is licensed under the MIT License - see the 
-[LICENSE.md](https://github.com/chmlee/pyamd/LICENSE.md) file for details.
+[LICENSE.md](https://github.com/chmlee/pyamd/blob/master/LICENSE) file for details.
 
 
 
