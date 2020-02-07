@@ -127,66 +127,6 @@ class test(Transformer):
 
 p = parser.parse(md)
 output = test().transform(p)
-print(output)
 print('===============================================')
-
-Tree(
-    start, [
-        Tree(
-            h1, 
-            [
-                'Group Level Meta-Data', 
-                Tree(content1, 
-                    [
-                        ['key 1', 'value 1'], 
-                        ['key 2', 'value 2'], 
-                        Tree(h2, 
-                            [
-                                'Level 2', 
-                                Tree(content2, 
-                                    [
-                                        ['AAA', 'aaa'], 
-                                        ['BBB', 'bbb']
-                                    ]
-                                )
-                            ]
-                        ), 
-                        Tree(h2, 
-                            [
-                                'Level 2', 
-                                Tree(content2, 
-                                    [
-                                        ['CCC', 'ccc'], 
-                                        ['DDD', 'ddd'], 
-                                        Tree(h3, 
-                                            [
-                                                'Level 3', 
-                                                Tree(content3, 
-                                                    [
-                                                        ['123', '456'], 
-                                                        ['789', '000']
-                                                    ]
-                                                ),
-                                            ]
-                                        ),
-                                        Tree(h3, 
-                                            [
-                                                'Level 3', 
-                                                Tree(content3, 
-                                                    [
-                                                        ['123', '456'], 
-                                                        ['789', '000']
-                                                    ]
-                                                ),
-                                            ]
-                                        )
-                                    ]
-                                )
-                            ]
-                        )
-                    ]
-                )
-            ]
-        ), 
-    Tree(h1, ['Group Level Meta-Data', Tree(content1, [['key 1', 'value 1'], ['key 2', 'value 2']])])])
+print(output)
 
