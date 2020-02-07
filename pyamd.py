@@ -1,30 +1,11 @@
 from lark import Lark
+import json
 
 with open('test1.md', 'r') as f:
     md = f.read()
 
-print(md)
+#print(md)
 
-
-parser = Lark(r"""
-        start: _NL? h1+
-
-        h1: h1_header _NL+ h1_content _NL*
-        h1_header: "#" /\w.*/
-        h1_content: list_item* h2*
-
-        h2: h2_header _NL+ h2_content _NL*
-        h2_header: "##" /\w.*/
-        h2_content: list_item*  
-
-        list_item: ["-"] /\w.*/ _NL+
-
-        %import common.CNAME -> NAME
-        %import common.NEWLINE -> _NL
-        %import common.WS_INLINE
-
-        %ignore WS_INLINE
-    """, parser="lalr")
 
 
 parser = Lark(r"""
@@ -37,12 +18,19 @@ parser = Lark(r"""
         h5: "#####"   name  _NL+  content5  _NL*
         h6: "######"  name  _NL+  content6  _NL*
 
-        content1: list_item* h2*
+        content1: item* h2*
         content2: list_item* h3* 
         content3: list_item* h4*
         content4: list_item* h5*
         content5: list_item* h6*
         content6: list_item*
+        
+        item: dict
+
+        dict: "-" key val  _NL+
+        key: /\w.*:/
+        val: /\w.*/
+           | item
 
         name: /\w.*/
         list_item: ["-"] /\w.*/ _NL+
@@ -64,6 +52,59 @@ print(p.pretty())
 from lark import Transformer, Tree
 
 class test(Transformer):
+    
+    def name(self, n):
+        (n,) = n
+        return n[:]
+
+    def key(self, k):
+        (k, ) = k
+        return k[:-1]
+
+    def val(self, v):
+        (v, ) = v
+        return v[:]
+
+    def dict(self, d):
+        return (d[0], d[1])
+
+    def item(self, i):
+        return i[0]
+
+
+    def content(self, c):
+        d = {}
+        for item in c:
+            key = item[0]
+            val = item[1]
+            if key not in d:
+                d[key] = [val]
+            else:
+                d[key].append(val)
+        # convert singleton of string to string
+        for key in d:
+            val = d[key]
+            if len(val) == 1:
+                if type(val[0]) == str:
+                    d[key] = val[0]
+        return d
+
+    start = content
+    content1 = content
+    
+
+
+    def h1(self, h):
+        return h
+
+
+p = parser.parse(md)
+output = test().transform(p)
+print(output)
+
+print('===============================================')
+
+class convert(Transformer):
 
     def list_item(self, item):
         (item_string, ) = item
@@ -109,24 +150,15 @@ class test(Transformer):
     h5 = h
     h6 = h
 
-    #def start(self, file):
-    #    dict_of_dict = {}
-    #    for entry in file:
-    #        dict_name = entry[0]
-    #        dict_item = entry[1]
-    #        if dict_name not in dict_of_dict:
-    #            dict_of_dict[dict_name] = [dict_item]
-    #        else:
-    #            dict_of_dict[dict_name].append(dict_item)
-    #    return dict_of_dict
-    #content2 = start
-
-     
 
 
 
-p = parser.parse(md)
-output = test().transform(p)
-print('===============================================')
-print(output)
+#p = parser.parse(md)
+#output = convert().transform(p)
+#print('===============================================')
+#
+#
+#print(json.dumps(output, indent =4))
+
+
 
