@@ -25,9 +25,9 @@ parser = Lark(r"""
         
         item: dict
 
-        dict: ("- "|"* ") key [val_str]  _NL+
+        dict: ("- "|"* ") key [val]  _NL+
         key: /.+:/
-        val_str: /.+/
+        val: /.+/
 
         name: /.+/
 
@@ -55,14 +55,9 @@ class test(Transformer):
         k = k[:-1] #remove trailing :
         return k[:]
 
-    def val_str(self, v):
+    def val(self, v):
         (v, ) = v
         return v[:]
-
-    def val_int(self, v):
-        (v, ) = v
-        v = int(v)
-        return v
 
     def dict(self, d):
         if len(d) == 2:
@@ -80,6 +75,12 @@ class test(Transformer):
         for item in c:
             key = item[0]
             val = item[1]
+            try:
+                val = int(val)
+            except ValueError:
+                pass
+            except TypeError:
+                pass
             if key not in d:
                 d[key] = [val]
             else:
@@ -88,7 +89,6 @@ class test(Transformer):
         for key in d:
             val = d[key]
             if len(val) == 1:
-                if type(val[0]) == str:
                     d[key] = val[0]
         return d
     start = content
@@ -118,14 +118,17 @@ with open('test1.md', 'r') as f:
 p = parser.parse(md)
 output = test().transform(p)
 print(output)
+with open('test1.json', 'w') as fp:
+    json.dump(output, fp)
 
 md1 = """
 # something
 
-- variable 1: value 1
-- variable 2: 22
-- variable 3: 34
+- variable 1: 1
+- variable 2: 2
+- variable 3: -44
 """
+
 p = parser.parse(md1)
 output = test().transform(p)
 print(output)
