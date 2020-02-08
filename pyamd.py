@@ -1,15 +1,13 @@
 from lark import Lark
 import json
 
-with open('test1.md', 'r') as f:
-    md = f.read()
 
 #print(md)
 
 
 
 parser = Lark(r"""
-        start: _NL? h1+
+        start: _NL? h1* dict*
 
         h1: "#"       name  _NL+  content1  _NL*
         h2: "##"      name  _NL+  content2  _NL*
@@ -18,22 +16,20 @@ parser = Lark(r"""
         h5: "#####"   name  _NL+  content5  _NL*
         h6: "######"  name  _NL+  content6  _NL*
 
-        content1: item* h2*
-        content2: list_item* h3* 
-        content3: list_item* h4*
-        content4: list_item* h5*
-        content5: list_item* h6*
-        content6: list_item*
+        content1: dict* h2*
+        content2: dict* h3* 
+        content3: dict* h4*
+        content4: dict* h5*
+        content5: dict* h6*
+        content6: dict*
         
         item: dict
 
-        dict: "-" key val  _NL+
-        key: /\w.*:/
-        val: /\w.*/
-           | item
+        dict: ("- "|"* ") key [val_str]  _NL+
+        key: /.+:/
+        val_str: /.+/
 
-        name: /\w.*/
-        list_item: ["-"] /\w.*/ _NL+
+        name: /.+/
 
         %import common.CNAME -> NAME
         %import common.NEWLINE -> _NL
@@ -44,10 +40,6 @@ parser = Lark(r"""
 
 
 print('===============================================')
-p = parser.parse(md)
-print(p.pretty())
-#print(p)
-#print(p.pretty())
 
 from lark import Transformer, Tree
 
@@ -63,15 +55,24 @@ class test(Transformer):
         k = k[:-1] #remove trailing :
         return k[:]
 
-    def val(self, v):
+    def val_str(self, v):
         (v, ) = v
         return v[:]
 
+    def val_int(self, v):
+        (v, ) = v
+        v = int(v)
+        return v
+
     def dict(self, d):
-        return (d[0], d[1])
+        if len(d) == 2:
+            tup = (d[0], d[1])
+        else:
+            tup = (d[0], "NA") # future version may allow user to customize no response
+        return tup
 
     def item(self, i):
-        return i[0]
+        return i
     
 
     def content(self, c):
@@ -90,19 +91,44 @@ class test(Transformer):
                 if type(val[0]) == str:
                     d[key] = val[0]
         return d
-
     start = content
     content1 = content
+    content2 = content
+    content3 = content
+    content4 = content
+    content5 = content
+    content6 = content
     
 
 
-    def h1(self, h):
+    def h(self, h):
         return h
+    h1 = h
+    h2 = h
+    h3 = h
+    h4 = h
+    h5 = h
+    h6 = h
+    h7 = h
 
 
 print('===============================================')
+with open('test1.md', 'r') as f:
+    md = f.read()
 p = parser.parse(md)
 output = test().transform(p)
 print(output)
 
+md1 = """
+# something
+
+- variable 1: value 1
+- variable 2: 22
+- variable 3: 34
+"""
+p = parser.parse(md1)
+output = test().transform(p)
+print(output)
+with open('test.json', 'w') as fp:
+    json.dump(output, fp)
 
