@@ -1,0 +1,29 @@
+        start: _NL? h1* dict*
+
+        h1: "#"       name  _NL+  content1  _NL*
+        h2: "##"      name  _NL+  content2  _NL*
+        h3: "###"     name  _NL+  content3  _NL*
+        h4: "####"    name  _NL+  content4  _NL*
+        h5: "#####"   name  _NL+  content5  _NL*
+        h6: "######"  name  _NL+  content6  _NL*
+
+        content1: dict* h2*
+        content2: dict* h3* 
+        content3: dict* h4*
+        content4: dict* h5*
+        content5: dict* h6*
+        content6: dict*
+        
+        item: dict
+
+        dict: ("- "| "* ") key [val]  _NL+
+        key: /.+:/
+        val: /.+/
+
+        name: /.+/
+
+        %import common.CNAME -> NAME
+        %import common.NEWLINE -> _NL
+        %import common.WS_INLINE
+
+        %ignore WS_INLINE

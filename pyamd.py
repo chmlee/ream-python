@@ -1,47 +1,10 @@
-from lark import Lark
+from lark import Lark, Transformer, Tree
 import json
 
+with open("parser_rule", "r") as f:
+    prule = f.read()
 
-#print(md)
-
-
-
-parser = Lark(r"""
-        start: _NL? h1* dict*
-
-        h1: "#"       name  _NL+  content1  _NL*
-        h2: "##"      name  _NL+  content2  _NL*
-        h3: "###"     name  _NL+  content3  _NL*
-        h4: "####"    name  _NL+  content4  _NL*
-        h5: "#####"   name  _NL+  content5  _NL*
-        h6: "######"  name  _NL+  content6  _NL*
-
-        content1: dict* h2*
-        content2: dict* h3* 
-        content3: dict* h4*
-        content4: dict* h5*
-        content5: dict* h6*
-        content6: dict*
-        
-        item: dict
-
-        dict: ("- "|"* ") key [val]  _NL+
-        key: /.+:/
-        val: /.+/
-
-        name: /.+/
-
-        %import common.CNAME -> NAME
-        %import common.NEWLINE -> _NL
-        %import common.WS_INLINE
-
-        %ignore WS_INLINE
-    """, parser="lalr")
-
-
-print('===============================================')
-
-from lark import Transformer, Tree
+parser = Lark(prule, parser="lalr")
 
 class test(Transformer):
     
@@ -113,6 +76,7 @@ class test(Transformer):
 
 
 print('===============================================')
+
 with open('test1.md', 'r') as f:
     md = f.read()
 p = parser.parse(md)
@@ -121,17 +85,17 @@ print(output)
 with open('test1.json', 'w') as fp:
     json.dump(output, fp)
 
+print('===============================================')
+
 md1 = """
-# something
-
-- variable 1: 1
-- variable 2: 2
-- variable 3: -44
+- variable 1:value 1
+ * variable 2: 2
+     -       variable   3   :   3.14
 """
-
 p = parser.parse(md1)
 output = test().transform(p)
 print(output)
 with open('test.json', 'w') as fp:
     json.dump(output, fp)
 
+print('===============================================')
