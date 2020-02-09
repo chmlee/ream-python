@@ -17,14 +17,20 @@ content6: dict*
 
 item: dict
 
-dict: ( "- "| "* " ) key [val]  _NL*
+dict: ( "- "| "* " ) key val  _NL*
 key: /.+:/
 val: h_list
    | str_int
+   | na
 
 str_int: /.+/
 
+na: _NL
+
+
 h_list:  /\[.+\]/
+
+
 
 %import common.CNAME -> NAME
 %import common.NEWLINE -> _NL

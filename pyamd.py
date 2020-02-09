@@ -35,10 +35,7 @@ class test(Transformer):
 
     def dict(self, d):
         # check if any value is stored
-        if len(d) == 2: 
-            tup = (d[0], d[1])
-        else:
-            tup = (d[0], "NA") # future version may allow user to customize no response
+        tup = (d[0], d[1])
         return tup
 
     def item(self, i):
@@ -93,7 +90,10 @@ class test(Transformer):
             except (ValueError, SyntaxError):
                 pass
         return h
-    
+
+    def na(self, n):
+        ph = "NA" # may be customizable in the future
+        return ph     
 
 
 
@@ -111,10 +111,8 @@ with open('test1.json', 'w') as fp:
 print('===============================================')
 
 md1 = """
-- variable 1: 1 + 1i
-- variable 2: [0, 1, 2, 3.14159]
-- variable 3: ["text requires quotes", 'text requires quotes', 1]
-- variable 4: [text 1, text 2, 3]
+- variable 1: [1, 2, 3]
+- variable 2: 
 """
 p = parser.parse(md1)
 print(p)
