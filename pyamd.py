@@ -85,7 +85,7 @@ class test(Transformer):
         return item
 
     def na(self, n):
-        ph = "NA" # may be customizable in the future
+        ph = None # may be customizable in the future
         return ph     
 
     def val(self, v):
@@ -121,6 +121,13 @@ print('===============================================')
 print('===============================================')
 
 md1 = """
+- key 0: 
+- key 1: 1
+- key 2: 01
+- key 3: "1"
+- key 4: "01"
+- key 5: 1.0
+- key 6: "1.0"
 """
 p = parser.parse(md1)
 print(p)
