@@ -8,6 +8,7 @@ with open("parser_rule.yaml", "r") as f:
 parser = Lark(prule, parser="lalr")
 
 class test(Transformer):
+
     
     def h(self, h):
         return h
@@ -29,9 +30,6 @@ class test(Transformer):
         k = k[:-1] #remove trailing :
         return k[:]
 
-    def val(self, v):
-        (v, ) = v
-        return v[:]
 
     def dict(self, d):
         # check if any value is stored
@@ -46,16 +44,6 @@ class test(Transformer):
         for item in c:
             key = item[0]
             val = item[1]
-            # convert value to integer if possible
-            # NOTE: try except might be too costly
-            if type(val) == str:
-                try:
-                    val = int(val)
-                except ValueError:
-                    try:
-                        val = float(val)
-                    except ValueError:
-                        pass
             # store value
             if key not in d:
                 d[key] = [val]
@@ -78,41 +66,61 @@ class test(Transformer):
 
     # value config
 
-    def str_int(self, s):
+    def string(self, s):
         (s,) = s
+        s = str(s)
+        if type(s) == str:
+            s = self.checkstring(s)
         return s
 
     def h_list(self, h):
         (h,) = h
-        if h[0] == "[":
-            try:
-                h = ast.literal_eval(h)
-            except (ValueError, SyntaxError):
-                pass
         return h
+
+    def v_list(self, v):
+        return v
+
+    def v_item(self, item):
+        (item,) = item
+        return item
 
     def na(self, n):
         ph = "NA" # may be customizable in the future
         return ph     
 
+    def val(self, v):
+        (v, ) = v
+        return v
+
+    def checkstring(self, x): # might rewrite with regex
+        x_0 = x[0]
+        if (x_0 == "'") or (x_0 == '"'):
+            x = x[1:-1]
+        else:
+            try:
+                x = int(x)
+            except ValueError:
+                try:
+                    x = float(x)
+                except ValueError:
+                    pass
+        return x
 
 
 
 print('===============================================')
 
-with open('test1.md', 'r') as f:
-    md = f.read()
-p = parser.parse(md)
-output = test().transform(p)
-print(output)
-with open('test1.json', 'w') as fp:
-    json.dump(output, fp)
+#with open('test1.md', 'r') as f:
+#    md = f.read()
+#p = parser.parse(md)
+#output = test().transform(p)
+#print(output)
+#with open('test1.json', 'w') as fp:
+#    json.dump(output, fp)
 
 print('===============================================')
 
 md1 = """
-- variable 1: [1, 2, 3]
-- variable 2: 
 """
 p = parser.parse(md1)
 print(p)

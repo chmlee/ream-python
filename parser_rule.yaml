@@ -17,13 +17,17 @@ content6: dict*
 
 item: dict
 
-dict: ( "- "| "* " ) key val  _NL*
+dict: "- " key val  _NL*
 key: /.+:/
 val: h_list
-   | str_int
+   | string
+   | v_list
    | na
 
-str_int: /.+/
+string: /.+/
+
+v_list: _NL ( "* " v_item _NL)+
+v_item: string
 
 na: _NL
 
@@ -37,3 +41,5 @@ h_list:  /\[.+\]/
 %import common.WS_INLINE
 
 %ignore WS_INLINE
+
+
