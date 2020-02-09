@@ -51,12 +51,14 @@ class test(Transformer):
             val = item[1]
             # convert value to integer if possible
             # NOTE: try except might be too costly
-            try:
-                val = int(val)
-            except ValueError:
-                pass
-            except TypeError:
-                pass
+            if type(val) == str:
+                try:
+                    val = int(val)
+                except ValueError:
+                    try:
+                        val = float(val)
+                    except ValueError:
+                        pass
             # store value
             if key not in d:
                 d[key] = [val]
@@ -85,10 +87,11 @@ class test(Transformer):
 
     def h_list(self, h):
         (h,) = h
-        try:
-            h = ast.literal_eval(h)
-        except ValueError:
-            pass
+        if h[0] == "[":
+            try:
+                h = ast.literal_eval(h)
+            except (ValueError, SyntaxError):
+                pass
         return h
     
 
@@ -108,9 +111,10 @@ with open('test1.json', 'w') as fp:
 print('===============================================')
 
 md1 = """
-- variable 1: value 1
-* variable 2: 2
-- variable 3: [1,2,3]
+- variable 1: 1 + 1i
+- variable 2: [0, 1, 2, 3.14159]
+- variable 3: ["text requires quotes", 'text requires quotes', 1]
+- variable 4: [text 1, text 2, 3]
 """
 p = parser.parse(md1)
 print(p)

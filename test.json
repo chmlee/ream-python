@@ -1,1 +1,1 @@
-{"variable 1": "value 1", "variable 2": 2, "variable 3": "[1,a,3]"}
+{"variable 1": "1 + 1i", "variable 2": [0, 1, 2, 3.14159], "variable 3": ["text requires quotes", "text requires quotes", 1], "variable 4": "[text 1, text 2, 3]"}
