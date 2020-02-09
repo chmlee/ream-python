@@ -1,6 +1,7 @@
 from lark import Lark, Transformer, Tree
 import json
 import ast
+import re
 
 with open("parser_rule.yaml", "r") as f:
     prule = f.read()
@@ -85,49 +86,60 @@ class test(Transformer):
         return item
 
     def na(self, n):
-        ph = None # may be customizable in the future
-        return ph     
+        return None
 
     def val(self, v):
         (v, ) = v
         return v
 
     def checkstring(self, x): # might rewrite with regex
-        x_0 = x[0]
-        if (x_0 == "'") or (x_0 == '"'):
-            x = x[1:-1]
+        # check float
+        if re.match(r"^-?[0-9]*\.[0-9]* *$", x): 
+            if x != ".": # "." is identified as float
+                x_out = float(x)
+            else:
+                x_out = x
+        # check integer
+        elif re.match(r"^-?[0-9]* *$", x): 
+            x_out = int(x)
+        # check whether number is forced to be stored as string
+        elif re.match(r"^\'-?[0-9]*\.?[0-9]*\' *$", x) or re.match(r"^\"-?[0-9]*\.?[0-9]*\" *$", x):
+            x_out = re.findall(r"-?[0-9]*\.?[0-9]*", x)[1]
+        # binary response
+        elif x == "TRUE":
+            x_out = True
+        elif x == "FALSE":
+            x_out = False
+        # no response
+        elif x == "NA":
+            x_out = None
         else:
-            try:
-                x = int(x)
-            except ValueError:
-                try:
-                    x = float(x)
-                except ValueError:
-                    pass
-        return x
+            x_out = x
+        return x_out
 
 
 
 print('===============================================')
 
-#with open('test1.md', 'r') as f:
-#    md = f.read()
-#p = parser.parse(md)
-#output = test().transform(p)
-#print(output)
-#with open('test1.json', 'w') as fp:
-#    json.dump(output, fp)
+with open('test1.md', 'r') as f:
+    md = f.read()
+p = parser.parse(md)
+output = test().transform(p)
+print(output)
+with open('test1.json', 'w') as fp:
+    json.dump(output, fp)
 
 print('===============================================')
 
 md1 = """
-- key 0: 
-- key 1: 1
-- key 2: 01
-- key 3: "1"
-- key 4: "01"
-- key 5: 1.0
-- key 6: "1.0"
+- key 1: NA
+- key 2: TRUE
+- key 3: FALSE
+- key 4: "a"
+- key 5: "1"       
+- key 6: 1   
+- key 7:    -1.     
+- key 8: '-1'    
 """
 p = parser.parse(md1)
 print(p)
