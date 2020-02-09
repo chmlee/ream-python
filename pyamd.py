@@ -1,13 +1,24 @@
 from lark import Lark, Transformer, Tree
 import json
+import ast
 
-with open("parser_rule", "r") as f:
+with open("parser_rule.yaml", "r") as f:
     prule = f.read()
 
 parser = Lark(prule, parser="lalr")
 
 class test(Transformer):
     
+    def h(self, h):
+        return h
+    h1 = h
+    h2 = h
+    h3 = h
+    h4 = h
+    h5 = h
+    h6 = h
+    h7 = h
+
     def name(self, n):
         (n,) = n
         n = n.strip()
@@ -23,7 +34,8 @@ class test(Transformer):
         return v[:]
 
     def dict(self, d):
-        if len(d) == 2:
+        # check if any value is stored
+        if len(d) == 2: 
             tup = (d[0], d[1])
         else:
             tup = (d[0], "NA") # future version may allow user to customize no response
@@ -31,19 +43,21 @@ class test(Transformer):
 
     def item(self, i):
         return i
-    
 
     def content(self, c):
         d = {}
         for item in c:
             key = item[0]
             val = item[1]
+            # convert value to integer if possible
+            # NOTE: try except might be too costly
             try:
                 val = int(val)
             except ValueError:
                 pass
             except TypeError:
                 pass
+            # store value
             if key not in d:
                 d[key] = [val]
             else:
@@ -54,6 +68,7 @@ class test(Transformer):
             if len(val) == 1:
                     d[key] = val[0]
         return d
+
     start = content
     content1 = content
     content2 = content
@@ -61,18 +76,23 @@ class test(Transformer):
     content4 = content
     content5 = content
     content6 = content
+
+    # value config
+
+    def str_int(self, s):
+        (s,) = s
+        return s
+
+    def h_list(self, h):
+        (h,) = h
+        try:
+            h = ast.literal_eval(h)
+        except ValueError:
+            pass
+        return h
     
 
 
-    def h(self, h):
-        return h
-    h1 = h
-    h2 = h
-    h3 = h
-    h4 = h
-    h5 = h
-    h6 = h
-    h7 = h
 
 
 print('===============================================')
@@ -88,11 +108,13 @@ with open('test1.json', 'w') as fp:
 print('===============================================')
 
 md1 = """
-- variable 1:value 1
- * variable 2: 2
-     -       variable   3   :   3.14
+- variable 1: value 1
+* variable 2: 2
+- variable 3: [1,2,3]
 """
 p = parser.parse(md1)
+print(p)
+print('===============================================')
 output = test().transform(p)
 print(output)
 with open('test.json', 'w') as fp:
