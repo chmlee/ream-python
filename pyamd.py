@@ -45,6 +45,9 @@ class test(Transformer):
         for item in c:
             key = item[0]
             val = item[1]
+            # ignore comment
+            if key == None:
+                continue
             # store value
             if key not in d:
                 d[key] = [val]
@@ -91,6 +94,9 @@ class test(Transformer):
     def val(self, v):
         (v, ) = v
         return v
+     
+    def com(self, c):
+        return (None, None)
 
     def checkstring(self, x): # might rewrite with regex
         # check float
@@ -124,6 +130,7 @@ print('===============================================')
 with open('test1.md', 'r') as f:
     md = f.read()
 p = parser.parse(md)
+print(p)
 output = test().transform(p)
 print(output)
 with open('test1.json', 'w') as fp:
@@ -132,14 +139,10 @@ with open('test1.json', 'w') as fp:
 print('===============================================')
 
 md1 = """
-- key 1: NA
-- key 2: TRUE
-- key 3: FALSE
-- key 4: "a"
-- key 5: "1"       
-- key 6: 1   
-- key 7:    -1.     
-- key 8: '-1'    
+# entry
+- key 1: value 1
+- key 2: value 2 
+- key 3: NA
 """
 p = parser.parse(md1)
 print(p)

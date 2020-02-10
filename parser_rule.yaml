@@ -1,23 +1,23 @@
 start: _NL? h1* dict*
 
 name: /.+/
-h1: "#"       name  _NL+  content1  _NL*
-h2: "##"      name  _NL+  content2  _NL*
-h3: "###"     name  _NL+  content3  _NL*
-h4: "####"    name  _NL+  content4  _NL*
-h5: "#####"   name  _NL+  content5  _NL*
-h6: "######"  name  _NL+  content6  _NL*
+h1: "#"       name  _NL+  [com] content1  _NL*
+h2: "##"      name  _NL+  [com] content2  _NL*
+h3: "###"     name  _NL+  [com] content3  _NL*
+h4: "####"    name  _NL+  [com] content4  _NL*
+h5: "#####"   name  _NL+  [com] content5  _NL*
+h6: "######"  name  _NL+  [com] content6  _NL*
 
-content1: dict* h2*
-content2: dict* h3* 
-content3: dict* h4*
-content4: dict* h5*
-content5: dict* h6*
-content6: dict*
+content1: (dict [com])* h2*
+content2: (dict [com])* h3* 
+content3: (dict [com])* h4*
+content4: (dict [com])* h5*
+content5: (dict [com])* h6*
+content6: (dict [com])*
 
 item: dict
 
-dict: "- " key val  _NL*
+dict: "- " key val _NL*
 key: /.+:/
 val: h_list
    | string
@@ -34,6 +34,7 @@ na: _NL
 
 h_list:  /\[.+\]/
 
+com: /(>.*\n)+/
 
 
 %import common.CNAME -> NAME
