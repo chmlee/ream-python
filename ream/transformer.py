@@ -1,17 +1,18 @@
-from lark import Lark, Transformer, Tree
-import json
-import ast
+"""
+Transformer class
+"""
 import re
+from lark import Transformer
 
-with open("parser_rule.yaml", "r") as f:
-    prule = f.read()
+class Ream2Json(Transformer):
+    """
+    something
+    """
 
-parser = Lark(prule, parser="lalr")
-
-class test(Transformer):
-
-    
     def h(self, h):
+        # remove comment
+        h = [item for item in h if item is not None]
+        ################
         return h
     h1 = h
     h2 = h
@@ -48,6 +49,7 @@ class test(Transformer):
             # ignore comment
             if key == None:
                 continue
+            ################
             # store value
             if key not in d:
                 d[key] = [val]
@@ -57,7 +59,7 @@ class test(Transformer):
         for key in d:
             val = d[key]
             if len(val) == 1:
-                    d[key] = val[0]
+                d[key] = val[0]
         return d
 
     start = content
@@ -79,7 +81,7 @@ class test(Transformer):
 
     def h_list(self, h):
         (h,) = h
-        return h
+        return eval(h) # WARNING: SAFETY CONCERN!
 
     def v_list(self, v):
         return v
@@ -94,19 +96,22 @@ class test(Transformer):
     def val(self, v):
         (v, ) = v
         return v
-     
-    def com(self, c):
+
+    def d_com(self, c):
         return (None, None)
+
+    def h_com(self, c):
+        return None
 
     def checkstring(self, x): # might rewrite with regex
         # check float
-        if re.match(r"^-?[0-9]*\.[0-9]* *$", x): 
+        if re.match(r"^-?[0-9]*\.[0-9]* *$", x):
             if x != ".": # "." is identified as float
                 x_out = float(x)
             else:
                 x_out = x
         # check integer
-        elif re.match(r"^-?[0-9]* *$", x): 
+        elif re.match(r"^-?[0-9]* *$", x):
             x_out = int(x)
         # check whether number is forced to be stored as string
         elif re.match(r"^\'-?[0-9]*\.?[0-9]*\' *$", x) or re.match(r"^\"-?[0-9]*\.?[0-9]*\" *$", x):
@@ -122,39 +127,3 @@ class test(Transformer):
         else:
             x_out = x
         return x_out
-
-
-
-print('===============================================')
-
-with open('test1.md', 'r') as f:
-    md = f.read()
-p = parser.parse(md)
-print(p)
-output = test().transform(p)
-print(output)
-with open('test1.json', 'w') as fp:
-    json.dump(output, fp)
-
-print('===============================================')
-
-md1 = """
-# entry
-- key 1: value 1
-- key 2: value 2 
-
-# entry
-- key 3: value 3
-- key 4: value 4
-
-"""
-
-p = parser.parse(md1)
-print(p)
-print('===============================================')
-output = test().transform(p)
-print(output)
-with open('test.json', 'w') as fp:
-    json.dump(output, fp)
-
-print('===============================================')
