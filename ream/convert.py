@@ -20,9 +20,10 @@ def convert(input_file, output_file):
 
     output_raw = Ream2Json().transform(input_tree)
 
-    with open(output_file, 'w') as file:
-        json.dump(output_raw, file)
+    if output_file is not None:
+        with open(output_file, 'w') as file:
+            json.dump(output_raw, file)
 
-    print(json.dumps(output_raw, indent=4))
+        print(json.dumps(output_raw, indent=4))
 
     return output_raw
