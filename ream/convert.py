@@ -24,3 +24,5 @@ def convert(input_file, output_file):
         json.dump(output_raw, file)
 
     print(json.dumps(output_raw, indent=4))
+
+    return output_raw
