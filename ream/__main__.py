@@ -18,8 +18,7 @@ if __name__ == "__main__":
     parser.add_argument('--input', '-i', help='your input file')
     parser.add_argument('--output', '-o', help='output file, with extension')
     arg = parser.parse_args()
-    #convert.convert(arg.input, arg.output)
-    print(arg.input, arg.output)
+    convert.convert(arg.input, arg.output)
 
 
 

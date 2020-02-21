@@ -50,5 +50,4 @@ REAM_RULE = Lark(r"""
     %import common.WS_INLINE
 
     %ignore WS_INLINE
-""",
-parser="lalr")
+""", parser="lalr")
