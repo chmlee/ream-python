@@ -11,7 +11,7 @@ template: something
 - Data Preserving Group Number: 3
 
 ## Diversity Preserving List
-- Diversity Preserving Group Names:
+- Diversity Preserving Group Names: 
   * A
   * B
   * C
@@ -44,4 +44,3 @@ template: something
 - Document URL: www.bing.com
 - Download Date: 02/02/2000
 - Page Number: 1234
-

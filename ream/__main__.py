@@ -17,8 +17,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='REAM decoder and encoder')
     parser.add_argument('--input', '-i', help='your input file')
     parser.add_argument('--output', '-o', help='output file, with extension')
+    parser.add_argument('--test', '-t', dest='debug', action='store_true')
     arg = parser.parse_args()
-    convert.convert(arg.input, arg.output)
+    convert.convert(arg.input, arg.output, arg.debug)
 
 
 

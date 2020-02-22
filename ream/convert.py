@@ -8,10 +8,11 @@ import sys
 import os
 import re
 import json
+import yaml
 from .transformer import Ream2Json
 from .parser import REAM_RULE
 
-def ream2json(input_file, output_file):
+def ream2json(input_file, output_file, debug):
     """ream to json"""
 
     with open(input_file, 'r') as file:
@@ -20,11 +21,12 @@ def ream2json(input_file, output_file):
     input_tree = REAM_RULE.parse(input_raw)
     output_raw = Ream2Json().transform(input_tree)
 
-    #print(input_tree)
-    #print("====================")
-    #print(input_tree.pretty())
-    #print("====================")
-    #print(output_raw)
+    if debug:
+        print(input_tree)
+        print("====================")
+        print(input_tree.pretty())
+        print("====================")
+        print(output_raw)
 
     if output_file is not None:
         with open(output_file, 'w') as file:
@@ -59,7 +61,6 @@ def json2ream(input_file, output_file):
         write_newline("")
         new_header = "".join(["#" for _ in range(level_num)] + [f" {header_name}"])
         write_newline(new_header)
-        write_newline("")
 
     def write_variable(key, var_raw):
         var, comment = check_comment(var_raw)
@@ -88,8 +89,17 @@ def json2ream(input_file, output_file):
                 else:
                     count += 1
                     for d_raw_1 in val:
-                        write_header(key, count)
-                        json2ream_inner(d_raw_1, count)
+                        ########### generate metadata ##########
+                        if key == "__metadata__":
+                            write_newline("---")
+                            for k, v in d_raw_1.items():
+                                write_newline(": ".join([k, v]))
+                            with open(output_file, "a") as file:
+                                file.write("---")
+                        ########################################
+                        else:
+                            write_header(key, count)
+                            json2ream_inner(d_raw_1, count)
                     count -= 1
 
     with open(input_file) as json_file:
@@ -97,7 +107,7 @@ def json2ream(input_file, output_file):
 
     json2ream_inner(j_raw)
 
-def convert(input_file, output_file=None):
+def convert(input_file, output_file=None, debug=False):
     """
     read and convert files
     """
@@ -116,7 +126,7 @@ def convert(input_file, output_file=None):
 
     # choose conversion function
     if input_ext in ["ream", "md"] and output_ext in ["json"]:
-        ream2json(input_file, output_file)
+        ream2json(input_file, output_file, debug)
     elif input_ext in ["json"] and output_ext in ["ream", "md"]:
         json2ream(input_file, output_file)
     else:

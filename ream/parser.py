@@ -4,10 +4,11 @@ Parser
 from lark import Lark
 
 REAM_RULE = Lark(r"""
-    start: _NL? variable* h1_wrapper*
+    start: _NL? meta_wrapper? h1_wrapper*
     
     _DASH:     "- "
     _STAR:     "*"
+    _TRI_DASH: "---"
     _HEADER_1: "#"
     _HEADER_2: "##"
     _HEADER_3: "###"
@@ -15,7 +16,10 @@ REAM_RULE = Lark(r"""
     _HEADER_5: "#####"
     _HEADER_6: "######"
 
-    NAME: /.+/
+    meta_wrapper: _TRI_DASH META+ _TRI_DASH
+    META: /.+/
+    
+
 
     h1_wrapper: _HEADER_1 NAME _NL* variable* h2_wrapper*
     h2_wrapper: _HEADER_2 NAME _NL* variable* h3_wrapper*
@@ -23,6 +27,8 @@ REAM_RULE = Lark(r"""
     h4_wrapper: _HEADER_4 NAME _NL* variable* h5_wrapper*
     h5_wrapper: _HEADER_5 NAME _NL* variable* h6_wrapper*
     h6_wrapper: _HEADER_6 NAME _NL* variable* 
+
+    NAME: /.+/
 
     variable: _DASH KEY value _NL*
     KEY:   /.+:/
