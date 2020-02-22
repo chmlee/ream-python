@@ -41,10 +41,19 @@ def convert(input_file, output_file=None):
         output_ext = "json"
 
 
+    print(repr(input_raw))
     if input_ext in ["ream", "md"] and output_ext in ["json"]:
+
 
         input_tree = REAM_RULE.parse(input_raw)
         output_raw = Ream2Json().transform(input_tree)
+        
+
+        print(input_tree)
+        print("====================")
+        print(input_tree.pretty())
+        print("====================")
+        print(output_raw)
 
         if output_file is not None:
             with open(output_file, 'w') as file:

@@ -4,50 +4,42 @@ Parser
 from lark import Lark
 
 REAM_RULE = Lark(r"""
-    start: _NL? dict* h1*
+    start: _NL? variable* h1_wrapper*
+    
+    _DASH:     "- "
+    _STAR:     "*"
+    _HEADER_1: "#"
+    _HEADER_2: "##"
+    _HEADER_3: "###"
+    _HEADER_4: "####"
+    _HEADER_5: "#####"
+    _HEADER_6: "######"
 
-    h1: "#"       name  _NL*  [ h_com _NL* ] content1  _NL*
-    h2: "##"      name  _NL*  [ h_com _NL* ] content2  _NL*
-    h3: "###"     name  _NL*  [ h_com _NL* ] content3  _NL*
-    h4: "####"    name  _NL*  [ h_com _NL* ] content4  _NL*
-    h5: "#####"   name  _NL*  [ h_com _NL* ] content5  _NL*
-    h6: "######"  name  _NL*  [ h_com _NL* ] content6  _NL*
+    NAME: /.+/
 
-    name: /.+/
+    h1_wrapper: _HEADER_1 NAME _NL* variable* h2_wrapper*
+    h2_wrapper: _HEADER_2 NAME _NL* variable* h3_wrapper*
+    h3_wrapper: _HEADER_3 NAME _NL* variable* h4_wrapper*
+    h4_wrapper: _HEADER_4 NAME _NL* variable* h5_wrapper*
+    h5_wrapper: _HEADER_5 NAME _NL* variable* h6_wrapper*
+    h6_wrapper: _HEADER_6 NAME _NL* variable* 
 
-    content1: (dict [d_com])* h2*
-    content2: (dict [d_com])* h3* 
-    content3: (dict [d_com])* h4*
-    content4: (dict [d_com])* h5*
-    content5: (dict [d_com])* h6*
-    content6: (dict [d_com])*
+    variable: _DASH KEY value _NL*
+    KEY:   /.+:/
+    value: string_wrapper
+         | star_list
 
-    item: dict
+    string_wrapper: STRING (COMMENT)*
+    STRING: /[^\*].*/
+    COMMENT: / *>.+/
 
-    dict: "- " key val _NL*
-    key: /.+:/
-    val: na
-       | h_list
-       | string
-       | v_list
-
-    string: /.+/
-
-    v_list: _NL ( "* " v_item _NL)+
-    v_item: val
-
-    na: _NL
+    star_list: (_STAR element)+ _NL*
+    element: STRING (COMMENT)*
 
 
-    h_list:  /\[.+\]/
 
-    d_com: /(>.*\n)+/
-    h_com: /(>.*\n)+/
-
-
-    %import common.CNAME -> NAME
     %import common.NEWLINE -> _NL
-    %import common.WS_INLINE
+    %import common.WS
+    %ignore WS
 
-    %ignore WS_INLINE
 """, parser="lalr")
