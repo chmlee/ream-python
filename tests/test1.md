@@ -1,4 +1,10 @@
-# Meta
+---
+title: Title
+author: John Doe
+key: value
+key 1: value 1
+---
+# Metda
 - Country: Botswana
 
 ## Data Preserving List
@@ -11,6 +17,7 @@
   * B
   * C
   * D
+
 - Diversity Preserving Group Number: 4
 - Survey Dropped: 1
 - Diversity Preserving Rationale: something blablabla
@@ -28,16 +35,15 @@
   - Matching Rationale: Same group with different name
 
 ### Source Material
-- Text: For full access to the **Illinois Wiki**, campus users should authenticate by clicking the Log In link in the upper right. From there, feel free to jump in and start *browsing pages*, or visit our help space for detailed instructions.  
+- Text: For full access to the **Illinois Wiki**, campus users should authenticate by clicking the Log In link in the upper right. From there, feel free to jump in and start *browsing pages*, or visit our help space for detailed instructions.
 - Citation: abc
 - Document URL: www.google.com
 - Download Date: 01/01/2000
 - Page Number: 123
 
 ### Source Material
-- Text: Another one for full access to the **Illinois Wiki**, campus users should authenticate by clicking the Log In link in the upper right. From there, feel free to jump in and start *browsing pages*, or visit our help space for detailed instructions.  
+- Text: Another one for full access to the **Illinois Wiki**, campus users should authenticate by clicking the Log In link in the upper right. From there, feel free to jump in and start *browsing pages*, or visit our help space for detailed instructions.
 - Citation: abcdef
 - Document URL: www.bing.com
 - Download Date: 02/02/2000
 - Page Number: 1234
-

@@ -5,7 +5,7 @@ from lark import Lark
 
 REAM_RULE = Lark(r"""
     start: _NL? meta_wrapper? h1_wrapper*
-    
+
     _DASH:     "- "
     _STAR:     "*"
     _TRI_DASH: "---"
@@ -18,7 +18,6 @@ REAM_RULE = Lark(r"""
 
     meta_wrapper: _TRI_DASH META+ _TRI_DASH
     META: /.+/
-    
 
 
     h1_wrapper: _HEADER_1 NAME _NL* variable* h2_wrapper*
@@ -26,7 +25,7 @@ REAM_RULE = Lark(r"""
     h3_wrapper: _HEADER_3 NAME _NL* variable* h4_wrapper*
     h4_wrapper: _HEADER_4 NAME _NL* variable* h5_wrapper*
     h5_wrapper: _HEADER_5 NAME _NL* variable* h6_wrapper*
-    h6_wrapper: _HEADER_6 NAME _NL* variable* 
+    h6_wrapper: _HEADER_6 NAME _NL* variable*
 
     NAME: /.+/
 

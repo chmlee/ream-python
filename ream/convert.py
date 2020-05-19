@@ -12,7 +12,7 @@ import yaml
 from .transformer import Ream2Json
 from .parser import REAM_RULE
 
-def ream2json(input_file, output_file, debug):
+def ream2json(input_file, output_file=None, debug=False):
     """ream to json"""
 
     with open(input_file, 'r') as file:
@@ -28,16 +28,15 @@ def ream2json(input_file, output_file, debug):
         print("====================")
         print(output_raw)
 
-    if output_file is not None:
+    if output_file is None:
+        return output_raw
+    else:
         with open(output_file, 'w') as file:
             json.dump(output_raw, file)
-
         print(json.dumps(output_raw, indent=4))
 
-    return output_raw
 
-
-def json2ream(input_file, output_file):
+def json2ream(input_file, output_file=None):
     """json to ream"""
 
     def write_newline(line, output_file=output_file):

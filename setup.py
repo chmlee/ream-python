@@ -7,13 +7,13 @@ with open('README.md') as f:
 
 setuptools.setup(
     author="Chih-Ming Louis Lee",
-    author_email="chihminglee1202@gmail.com",
+    author_email="louis@chihminglee.com",
     name='ream',
     license="MIT",
     description="REAM Ain't Markdown",
     version='v0.1-alpha',
     long_description=README,
-    url='https://github.com/chmlee/YAMD',
+    url='https://github.com/chmlee/ream-python',
     packages=setuptools.find_packages(),
     python_requires=">=3.5",
     install_requires=['lark'],
