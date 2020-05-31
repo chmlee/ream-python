@@ -1,48 +1,18 @@
 """
+ream: ream ain't markdown
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Convert input file to output file
+this file is part of the ream package
+
+:copyright: copyright 2020 by chih-ming louis lee
+:license: mit, see license for details
 
 """
 
-import sys
-import os
-import re
 import json
-import yaml
-from .transformer import Ream2Json
-from .grammar import REAM_RULE
+import re
 
-def ream2json(input_file, output_file=None, debug=False, no_comment=False):
-    """ream to json"""
-
-    with open(input_file, 'r') as file:
-        input_raw = file.read()
-
-    if no_comment:
-        Ream2Json.no_comment = True
-    else:
-        Ream2Json.no_comment = False
-
-    input_tree = REAM_RULE.parse(input_raw)
-    output_raw = Ream2Json().transform(input_tree)
-
-    if debug:
-        print(input_tree)
-        print("====================")
-        print(input_tree.pretty())
-        print("====================")
-        print(output_raw)
-        print("====================")
-
-    if output_file is None:
-        return output_raw
-    else:
-        with open(output_file, 'w') as file:
-            json.dump(output_raw, file)
-        print(json.dumps(output_raw, indent=4))
-
-
-def json2ream(input_file, output_file=None):
+def json2ream(input_file, output_file):
     """json to ream"""
 
     def write_newline(line, output_file=output_file):
@@ -97,8 +67,8 @@ def json2ream(input_file, output_file=None):
                         ########### generate metadata ##########
                         if key == "__metadata__":
                             write_newline("---")
-                            for k, v in d_raw_1.items():
-                                write_newline(": ".join([k, v]))
+                            for key_1, value_1 in d_raw_1.items():
+                                write_newline(": ".join([key_1, value_1]))
                             with open(output_file, "a") as file:
                                 file.write("---")
                         ########################################
@@ -112,36 +82,11 @@ def json2ream(input_file, output_file=None):
 
     json2ream_inner(j_raw)
 
-def convert(input_file, output_file, debug=False, force=False, no_comment=True):
-    """
-    read and convert files
-    """
+def main(input_file, input_ext, output_file):
+    "main function for encoding ream file"
 
-    if no_comment:
-        print(no_comment)
-
-    # check whether input file exist
-    if not os.path.exists(input_file):
-        print("Input file not found. Make sure you enter a valid path.")
-        sys.exit()
-
-    # check whether output file exist
-    if os.path.exists(output_file) and force == False:
-        print("Output file exists. To overwrite it, add --force flag")
-        sys.exit()
-
-    # read file type
-    input_ext = input_file.split('.')[-1]
-    output_ext = output_file.split('.')[-1]
-
-    # choose conversion function
-    if input_ext in ["ream", "md"]:
-        if output_ext in ["json"]:
-            ream2json(input_file, output_file, debug, no_comment)
-
-    elif input_ext in ["json"]:
-        if output_ext in ["ream", "md"]:
-            json2ream(input_file, output_file)
-
+    if input_ext in ['json']:
+        json2ream(input_file, output_file)
     else:
-        pass
+        print("Input file format not supported.")
+    print("Complete")
