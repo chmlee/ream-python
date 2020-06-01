@@ -10,4 +10,4 @@ REAM: REAM Ain't Markdown
 __author__ = "Chih-Ming Louis Lee"
 __copyright__ = "Copyright 2020 Chih-Ming Louis Lee"
 __license__ = "MIT"
-__version__ = "0.1.3"
+__version__ = "0.1.4"
