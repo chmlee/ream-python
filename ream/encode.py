@@ -1,14 +1,13 @@
 """
-ream: ream ain't markdown
+REAM: REAM Ain't Markdown
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 this file is part of the ream package
 
-:copyright: copyright 2020 by chih-ming louis lee
-:license: mit, see license for details
+:copyright: Copyright 2020 by Chih-Ming Louis Lee
+:license: MIT, see LICENSE for details
 
 """
-
 import json
 import re
 

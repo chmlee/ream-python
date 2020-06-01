@@ -1,9 +1,13 @@
 """
+REAM: REAM Ain't Markdown
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Convert input file to output file
+This file is part of the ream package
+
+:copyright: Copyright 2020 by Chih-Ming Louis Lee
+:license: MIT, see LICENSE for details
 
 """
-
 import sys
 import os
 import re

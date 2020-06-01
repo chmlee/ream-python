@@ -9,7 +9,6 @@ This file is part of the ream package
 :license: MIT, see LICENSE for details
 
 """
-
 import ream.commandline
 
 if __name__ == "__main__":

@@ -8,7 +8,6 @@ This file is part of the ream package
 :license: MIT, see LICENSE for details
 
 """
-
 import os
 import sys
 import argparse

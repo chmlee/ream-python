@@ -1,5 +1,12 @@
 """
-Transformer class
+REAM: Ream Ain't Markdown
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+this file is part of the ream package
+
+:copyright: Copyright 2020 by Chih-Ming Louis Lee
+:license: MIT, see LICENSE for details
+
 """
 import re
 import yaml

@@ -2,6 +2,8 @@
 REAM: REAM Ain't Markdown
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
+This file is part of the ream package
+
 :copyright: Copyright 2020 by Chih-Ming Louis Lee
 :license: MIT, see LICENSE for details
 
