@@ -25,3 +25,6 @@ lark = "^0.0.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.4"
+
+[tool.poetry.scripts]
+ream = "ream.commandline:main"
