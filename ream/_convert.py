@@ -43,7 +43,7 @@ def ream2json(input_file, output_file=None, debug=False, no_comment=False):
     else:
         with open(output_file, 'w') as file:
             json.dump(output_raw, file)
-        print(json.dumps(output_raw, indent=4))
+        #print(json.dumps(output_raw, indent=4))
 
 
 def json2ream(input_file, output_file=None):

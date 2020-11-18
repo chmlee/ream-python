@@ -9,7 +9,6 @@ this file is part of the ream package
 
 """
 import re
-import yaml
 import ast
 from lark import Transformer
 
@@ -21,7 +20,7 @@ class Ream2Dict(Transformer):
     no_comment = False
 
     def meta_wrapper(self, wrapper):
-        output_dict = yaml.safe_load("".join([f"{x}\r" for x in wrapper]))
+        # output_dict = yaml.safe_load("".join([f"{x}\r" for x in wrapper]))
         return ["__metadata__", output_dict]
 
     def META(self, meta):
